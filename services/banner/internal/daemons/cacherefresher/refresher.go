@@ -66,14 +66,15 @@ func (s *CacheRefresher) refresh(scrapeInterval time.Duration) {
 	ctxLogger := zapctx.WithLogger(requestIdCtx, s.logger)
 
 	tr := global.Tracer(domain.ServiceName)
-	ctx, span := tr.Start(ctxLogger, "banner/daemon/refresher.refresh", trace.WithNewRoot())
+	_, span := tr.Start(ctxLogger, "banner/daemon/refresher.refresh", trace.WithNewRoot())
 	defer span.End()
 
-	err := s.bannerCache.UpdateMostViewed(ctx)
-	if err != nil {
-		s.logger.Error("failed to refresh cache", zap.Error(err))
-		return
-	}
+	s.bannerCache.Clean()
+
+	//if err != nil {
+	//	s.logger.Error("failed to refresh cache", zap.Error(err))
+	//	return
+	//}
 
 	time.Sleep(scrapeInterval)
 }

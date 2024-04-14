@@ -34,6 +34,10 @@ cache_refresher:
 postpone_deleter:
   iteration_interval: "10s"
 
+cache:
+  expiration: "900s"
+  initial_size: 10000
+
 tracer:
   enable: true
   exp_target: "host.docker.internal:4317"

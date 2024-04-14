@@ -37,7 +37,7 @@ down-obs:
 # Migrations
 
 migrate-up:
-	migrate -path ./xor-go/services/banner/migrations -database 'postgres://$(BANNER_POSTGRES_USER):$(BANNER_POSTGRES_PASSWORD)@$(BANNER_POSTGRES_HOST_LOCAL):$(BANNER_POSTGRES_PORT_EXTERNAL)/$(BANNER_POSTGRES_NAME)?sslmode=disable' up
+	migrate -path ./services/banner/migrations -database 'postgres://$(BANNER_POSTGRES_USER):$(BANNER_POSTGRES_PASSWORD)@$(BANNER_POSTGRES_HOST_LOCAL):$(BANNER_POSTGRES_PORT_EXTERNAL)/$(BANNER_POSTGRES_NAME)?sslmode=disable' up
 
 migrate-down:
-	migrate -path ./xor-go/services/banner/migrations -database 'postgres://$(BANNER_POSTGRES_USER):$(BANNER_POSTGRES_PASSWORD)@$(BANNER_POSTGRES_HOST_LOCAL):$(BANNER_POSTGRES_PORT_EXTERNAL)/$(BANNER_POSTGRES_NAME)?sslmode=disable' down 1
+	migrate -path ./services/banner/migrations -database 'postgres://$(BANNER_POSTGRES_USER):$(BANNER_POSTGRES_PASSWORD)@$(BANNER_POSTGRES_HOST_LOCAL):$(BANNER_POSTGRES_PORT_EXTERNAL)/$(BANNER_POSTGRES_NAME)?sslmode=disable' down 1

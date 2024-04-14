@@ -2,6 +2,7 @@ package oapi
 
 import (
 	"avito-go/services/banner/internal/domain"
+	"encoding/json"
 	"errors"
 )
 
@@ -18,12 +19,17 @@ func (b PostBannerJSONBody) ToDomain() (domain.Banner, error) {
 	if b.TagIds == nil {
 		return domain.Banner{}, errors.New("tags is required")
 	}
+	content, err := json.Marshal(b.Content)
+	if err != nil {
+		return domain.Banner{}, err
+	}
+
 	if len(*b.TagIds) == 0 {
 		return domain.Banner{}, errors.New("at least one tag is required")
 	}
 	return domain.Banner{
 		ID:       0,
-		Content:  b.Content,
+		Content:  content,
 		IsActive: *b.IsActive,
 		Feature:  *b.FeatureId,
 		Tags:     *b.TagIds,

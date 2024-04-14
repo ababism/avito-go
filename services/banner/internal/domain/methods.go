@@ -2,11 +2,11 @@ package domain
 
 import (
 	"avito-go/pkg/xstringset"
-	"github.com/google/uuid"
 )
 
-func NewActor(ID uuid.UUID, roles []string) Actor {
-	a := Actor{ID: ID,
+func NewActor(roles []string) Actor {
+	a := Actor{
+		//ID: ID,
 		roles: xstringset.New()}
 	a.initRoles(roles)
 	return a

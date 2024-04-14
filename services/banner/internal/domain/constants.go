@@ -1,7 +1,7 @@
 package domain
 
 const (
-	UnknownRole = "user"
+	UnknownRole = "unknown"
 	UserRole    = "user"
 	AdminRole   = "admin"
 )

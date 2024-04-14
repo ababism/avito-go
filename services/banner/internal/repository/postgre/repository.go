@@ -6,12 +6,11 @@ import (
 )
 
 const (
-	BankAccountsTable     = "bank_accounts"
-	PaymentsTable         = "payments"
-	ProductsTable         = "products"
-	DiscountsTable        = "discounts"
-	PayoutRequestsTable   = "payout_requests"
-	PurchaseRequestsTable = "purchase_requests"
+	BannerTable        = "bank_accounts"
+	TagTable           = "payments"
+	FeatureTable       = "feature"
+	BannerFeatureTable = "banners_feature"
+	BannerTagsTable    = "banners_tags"
 )
 
 func formatQuery(q string) string {

@@ -10,6 +10,7 @@ import (
 	"avito-go/pkg/xshutdown"
 	"avito-go/pkg/xtracer"
 	"avito-go/services/banner/internal/daemons/cacherefresher"
+	"avito-go/services/banner/internal/repository/cache"
 	"github.com/spf13/viper"
 	"log"
 	//"avito-go/services/banner/internal/repository/postgre"
@@ -23,6 +24,7 @@ type Config struct {
 	GracefulShutdown *xshutdown.Config      `mapstructure:"graceful_shutdown"`
 	Tracer           *xtracer.Config        `mapstructure:"tracer"`
 	CacheRefresher   *cacherefresher.Config `mapstructure:"cache_refresher"`
+	Cache            *cache.Config          `mapstructure:"cache"`
 	Postgres         *xpostgres.Config      `mapstructure:"postgres"`
 }
 

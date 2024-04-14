@@ -2,12 +2,36 @@ package banner
 
 import (
 	"avito-go/pkg/xapp"
+	"avito-go/services/banner/internal/domain"
 	"avito-go/services/banner/internal/handler/http/models"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"net/http"
 )
+
+func parseRolesFromToken(c *gin.Context, token *string) ([]string, error) {
+	if token == nil {
+		return make([]string, 0), xapp.NewError(http.StatusUnauthorized, "token is required", "token is required", nil)
+	}
+	switch *token {
+	case "user_token":
+		return []string{domain.UserRole}, nil
+	case "admin_token":
+		return []string{domain.AdminRole}, nil
+	default:
+		return make([]string, 0), xapp.NewError(http.StatusUnauthorized, "invalid token", "invalid token", nil)
+	}
+}
+
+func NewActorFromToken(c *gin.Context, token *string) (domain.Actor, error) {
+	roles, err := parseRolesFromToken(c, token)
+	if err != nil {
+		return domain.Actor{}, err
+	}
+	return domain.NewActor(roles), nil
+
+}
 
 func AbortWithBadResponse(c *gin.Context, logger *zap.Logger, statusCode int, err error) {
 	logger.Debug(fmt.Sprintf("%s: %d %s", c.Request.URL, statusCode, xapp.GetLastMessage(err)))

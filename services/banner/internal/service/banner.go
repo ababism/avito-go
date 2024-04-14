@@ -1,33 +1,132 @@
 package service
 
 import (
+	"avito-go/pkg/xapp"
 	"avito-go/services/banner/internal/domain"
 	"context"
+	"fmt"
+	global "go.opentelemetry.io/otel"
+	"net/http"
 )
 
-func (s BannerService) Find(ctx context.Context, actor domain.Actor, tag, feature int, useLastRevision bool) (domain.CachedBanner, error) {
-	//TODO implement me
-	panic("implement me")
+func (s BannerService) Create(initialCtx context.Context, actor domain.Actor, banner domain.Banner) (int, error) {
+	tr := global.Tracer(domain.ServiceName)
+	ctx, span := tr.Start(initialCtx, s.spanName("GetList"))
+	defer span.End()
+
+	ToSpan(&span, actor)
+
+	if !actor.HasRole(domain.AdminRole) {
+		return 0, xapp.NewError(http.StatusForbidden, "user can't create banner",
+			fmt.Sprintf("actor do not have %s role", domain.AdminRole), nil)
+	}
+
+	bannerInserted, err := s.repository.Create(ctx, banner)
+	if err != nil {
+		return 0, err
+	}
+	bannerID := bannerInserted.ID
+
+	return bannerID, nil
 }
 
-func (s BannerService) Create(ctx context.Context, actor domain.Actor, course domain.Banner) (int, error) {
-	//TODO implement me
-	panic("implement me")
+func (s BannerService) GetList(initialCtx context.Context, actor domain.Actor, filter domain.BannerFilter) ([]domain.Banner, error) {
+	tr := global.Tracer(domain.ServiceName)
+	ctx, span := tr.Start(initialCtx, s.spanName("GetList"))
+	defer span.End()
+
+	ToSpan(&span, actor)
+
+	if !actor.HasOneOfRoles(domain.AdminRole, domain.UserRole) {
+		return nil, xapp.NewError(http.StatusForbidden, "user does not roles to get banner list",
+			fmt.Sprintf("actor do not have %s or %s roles", domain.AdminRole, domain.UserRole), nil)
+	}
+
+	banners, err := s.repository.GetList(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+
+	bannerRes := make([]domain.Banner, 0, len(banners))
+
+	for _, banner := range banners {
+		if banner.IsActive || actor.HasRole(domain.AdminRole) {
+			bannerRes = append(bannerRes, banner)
+		}
+	}
+
+	return bannerRes, nil
 }
 
-func (s BannerService) GetList(ctx context.Context, actor domain.Actor, filter domain.BannerFilter) ([]domain.Banner, error) {
-	//TODO implement me
-	panic("implement me")
+func (s BannerService) Update(initialCtx context.Context, actor domain.Actor, bannerID int, banner domain.Banner) error {
+	tr := global.Tracer(domain.ServiceName)
+	ctx, span := tr.Start(initialCtx, s.spanName("GetList"))
+	defer span.End()
+
+	ToSpan(&span, actor)
+
+	if !actor.HasRole(domain.AdminRole) {
+		return xapp.NewError(http.StatusForbidden, "user can't update banner",
+			fmt.Sprintf("actor do not have %s role", domain.AdminRole), nil)
+	}
+
+	_, err := s.repository.Update(ctx, bannerID, banner)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
-func (s BannerService) Update(ctx context.Context, actor domain.Actor, bannerID int, banner domain.Banner) error {
-	//TODO implement me
-	panic("implement me")
+func (s BannerService) Delete(initialCtx context.Context, actor domain.Actor, bannerID int) error {
+	tr := global.Tracer(domain.ServiceName)
+	ctx, span := tr.Start(initialCtx, s.spanName("GetList"))
+	defer span.End()
+
+	ToSpan(&span, actor)
+
+	if !actor.HasRole(domain.AdminRole) {
+		return xapp.NewError(http.StatusForbidden, "user can't delete banner",
+			fmt.Sprintf("actor do not have %s role", domain.AdminRole), nil)
+	}
+
+	err := s.repository.Delete(ctx, bannerID)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
-func (s BannerService) Delete(ctx context.Context, actor domain.Actor, bannerID int) error {
-	//TODO implement me
-	panic("implement me")
+func (s BannerService) Find(initialCtx context.Context, actor domain.Actor, tag, feature int, useLastRevision bool) (domain.CachedBanner, error) {
+	tr := global.Tracer(domain.ServiceName)
+	ctx, span := tr.Start(initialCtx, s.spanName("GetList"))
+	defer span.End()
+
+	ToSpan(&span, actor)
+
+	if !actor.HasOneOfRoles(domain.AdminRole, domain.UserRole) {
+		return domain.CachedBanner{}, xapp.NewError(http.StatusForbidden, "user can't find banner",
+			fmt.Sprintf("actor do not have %s or %s roles", domain.AdminRole, domain.UserRole), nil)
+	}
+
+	cachedBanner, found := s.cache.Get(tag, feature)
+	if found {
+		return *cachedBanner, nil
+
+	}
+
+	banner, err := s.repository.Find(ctx, tag, feature)
+	if err != nil {
+		return domain.CachedBanner{}, err
+	}
+
+	return domain.CachedBanner{
+		ID:       banner.ID,
+		Content:  banner.Content,
+		IsActive: banner.IsActive,
+	}, nil
+
 }
 
 //func (c BannerService) CreateCourse(initialCtx context.Context, actor domain.Actor, course *domain.Course) (*domain.Course, error) {

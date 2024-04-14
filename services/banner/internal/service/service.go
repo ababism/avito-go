@@ -18,3 +18,7 @@ func NewBannerService(bannerRepository ports.BannerRepository, bannerCache ports
 		repository: bannerRepository,
 	}
 }
+
+func (s BannerService) spanName(funcName string) string {
+	return "banner/service." + funcName
+}

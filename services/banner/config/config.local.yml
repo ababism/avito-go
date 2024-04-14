@@ -27,6 +27,11 @@ cache_refresher:
 postpone_deleter:
   iteration_interval: "10s"
 
+cache:
+  expiration: "900s"
+  initial_size: 10000
+
+
 tracer:
   enable: false
   exp_target: "jaeger-all-in-one:4317"

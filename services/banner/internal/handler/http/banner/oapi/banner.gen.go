@@ -6,10 +6,35 @@ package oapi
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/oapi-codegen/runtime"
 )
+
+// Banner defines model for Banner.
+type Banner struct {
+	// BannerId Идентификатор баннера
+	BannerId *int `json:"banner_id,omitempty"`
+
+	// Content Содержимое баннера
+	Content *map[string]interface{} `json:"content,omitempty"`
+
+	// CreatedAt Дата создания баннера
+	CreatedAt *time.Time `json:"created_at,omitempty"`
+
+	// FeatureId Идентификатор фичи
+	FeatureId *int `json:"feature_id,omitempty"`
+
+	// IsActive Флаг активности баннера
+	IsActive *bool `json:"is_active,omitempty"`
+
+	// TagIds Идентификаторы тэгов
+	TagIds *[]int `json:"tag_ids,omitempty"`
+
+	// UpdatedAt Дата обновления баннера
+	UpdatedAt *time.Time `json:"updated_at,omitempty"`
+}
 
 // GetBannerParams defines parameters for GetBanner.
 type GetBannerParams struct {

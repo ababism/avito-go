@@ -9,6 +9,7 @@ import (
 	"avito-go/pkg/xtracer"
 	"avito-go/services/banner/internal/config"
 	"avito-go/services/banner/internal/daemons/cacherefresher"
+	"avito-go/services/banner/internal/repository/cache"
 	"avito-go/services/banner/internal/repository/postgre"
 	"avito-go/services/banner/internal/service"
 	"avito-go/services/banner/internal/service/ports"
@@ -111,7 +112,7 @@ func NewApp(cfg *config.Config) (*App, error) {
 
 	// All repositories
 	bannerRepository := postgre.NewBannerRepository(PostgreSQL)
-	bannerCache := postgre.NewBannerCache(PostgreSQL)
+	bannerCache := cache.New(cfg.Cache)
 
 	// SERVICE LAYER ----------------------------------------------------------------------
 

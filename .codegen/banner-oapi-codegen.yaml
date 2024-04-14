@@ -1,6 +1,6 @@
 # banner-oapi-codegen.yaml for banner api + server
 
-output: services/banner/internal/handler/oapi/banner.gen.go
+output: services/banner/internal/handler/http/banner/oapi/banner.gen.go
 package: oapi
 generate:
   - types

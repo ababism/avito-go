@@ -1,25 +1,25 @@
 CREATE TABLE banner
 (
     id         SERIAL PRIMARY KEY,
-    content    JSONB     NOT NULL,
+    content    JSONB    NOT NULL,
     is_active  BOOLEAN   NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE tag
-(
-    id         SERIAL PRIMARY KEY,
-    created_at TIMESTAMP NOT NULL DEFAULT NOW()
---     updated_at   TIMESTAMP    NOT NULL DEFAULT NOW()
-);
-
-CREATE TABLE feature
-(
-    id         SERIAL PRIMARY KEY,
-    created_at TIMESTAMP NOT NULL DEFAULT NOW()
---     updated_at   TIMESTAMP    NOT NULL DEFAULT NOW()
-);
+-- CREATE TABLE tag
+-- (
+--     id         SERIAL PRIMARY KEY,
+--     created_at TIMESTAMP NOT NULL DEFAULT NOW()
+-- --     updated_at   TIMESTAMP    NOT NULL DEFAULT NOW()
+-- );
+--
+-- CREATE TABLE feature
+-- (
+--     id         SERIAL PRIMARY KEY,
+--     created_at TIMESTAMP NOT NULL DEFAULT NOW()
+-- --     updated_at   TIMESTAMP    NOT NULL DEFAULT NOW()
+-- );
 
 CREATE TABLE banners_tags
 (
@@ -27,8 +27,7 @@ CREATE TABLE banners_tags
     tag_id    INT NOT NULL,
 
     PRIMARY KEY (banner_id, tag_id),
-    FOREIGN KEY (banner_id) REFERENCES banner (id),
-    FOREIGN KEY (banner_id) REFERENCES tag (id)
+    FOREIGN KEY (banner_id) REFERENCES banner (id)
 );
 
 CREATE TABLE banners_feature
@@ -37,8 +36,7 @@ CREATE TABLE banners_feature
     feature_id INT NOT NULL,
 
     PRIMARY KEY (banner_id, feature_id),
-    FOREIGN KEY (banner_id) REFERENCES banner (id),
-    FOREIGN KEY (banner_id) REFERENCES feature (id)
+    FOREIGN KEY (banner_id) REFERENCES banner (id)
 );
 
 CREATE
