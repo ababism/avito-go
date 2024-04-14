@@ -1,0 +1,12 @@
+# banner-oapi-codegen.yaml for banner api + server
+
+output: services/banner/internal/handler/oapi/banner.gen.go
+package: oapi
+generate:
+  - types
+  - gin-server
+  - models
+#  - embedded-spec
+
+# To RUN from root:
+# oapi-codegen --config .codegen/banner-oapi-codegen.yaml oapi/banner.yaml

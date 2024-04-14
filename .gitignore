@@ -1,0 +1,7 @@
+/.idea/
+
+*.env
+
+TASK.md
+
+oapi/banner.yaml

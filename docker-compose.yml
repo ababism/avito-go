@@ -1,0 +1,77 @@
+version: '3.9'
+
+services:
+  banner-svc:
+    build:
+      context: './'
+      dockerfile: 'banner.Dockerfile'
+    image: 'courses-svc:latest'
+    ports:
+      - "8080:8080"
+    depends_on:
+      banner_db:
+        condition: service_healthy
+    environment:
+      - DB_PASSWORD=${BANNER_POSTGRES_PASSWORD}
+
+  banner_db:
+    restart: always
+    image: postgres:latest
+    ports:
+      - "5436:5432"
+    environment:
+      - POSTGRES_DB=${BANNER_POSTGRES_NAME}
+      - POSTGRES_HOST=${BANNER_POSTGRES_HOST}
+      - POSTGRES_USER=${BANNER_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${BANNER_POSTGRES_PASSWORD}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d banner_db" ]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+
+networks:
+  banner:
+    name: banner
+
+#volumes:
+#    banner_data:
+#    banner_config:
+
+#  zookeeper:
+#    image: wurstmeister/zookeeper:latest
+#    ports:
+#      - "2181:2181"
+#    environment:
+#      ZOOKEEPER_CLIENT_PORT: 2181
+#  kafka:
+#    depends_on:
+#      - zookeeper
+#    container_name: kafka
+#    image: wurstmeister/kafka:latest
+#    ports:
+#      - "9094:9094"
+#    environment:
+#      KAFKA_BROKER_ID: 1
+#      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+#      KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,OUTSIDE://0.0.0.0:9094
+#      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,OUTSIDE://localhost:9094
+#      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,OUTSIDE:PLAINTEXT
+#      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+#  init-kafka:
+#    image: confluentinc/cp-kafka:latest
+#    depends_on:
+#      - kafka
+#    entrypoint: [ '/bin/sh', '-c' ]
+#    command: |
+#      "
+#      kafka-topics.sh --bootstrap-server kafka:9092 --list
+#
+#      echo -e 'Creating kafka topics'
+#      kafka-topics.sh --bootstrap-server kafka:9092 --create --if-not-exists --topic outbound --replication-factor 1 --partitions 1
+#      kafka-topics.sh --bootstrap-server kafka:9092 --create --if-not-exists --topic inbound --replication-factor 1 --partitions 1
+#
+#      echo -e 'Successfully created the following topics:'
+#      kafka-topics.sh --bootstrap-server kafka:9092 --list
+#      "
+

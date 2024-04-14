@@ -1,0 +1,10 @@
+DROP TABLE IF EXISTS banner;
+
+DROP TABLE IF EXISTS tag;
+
+DROP TABLE IF EXISTS feature;
+
+DROP TABLE IF EXISTS banners_feature;
+
+DROP TABLE IF EXISTS banners_tags;
+
