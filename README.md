@@ -48,7 +48,6 @@
 Все контейнеры с мониторингом поднимаются и работают независимо от других сервисов.
 
 
-
-
-
+### Postman с примерами тут:
+[banner-api.postman_collection.json](services/banner/docs/banner-api.postman_collection.json)
 
